@@ -1,13 +1,19 @@
 {
   "name": "brassbook-finance-tracker",
+  "productName": "BrassBook",
   "private": true,
   "version": "1.0.0",
   "description": "BrassBook — a comprehensive personal finance tracker with expenses, savings goals, budgets, AI coach, and a points & badges rewards system.",
   "type": "module",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "build:electron": "cross-env BUILD_TARGET=electron vite build",
+    "preview": "vite preview",
+    "dist:win": "npm run build:electron && electron-builder --win",
+    "dist:mac": "npm run build:electron && electron-builder --mac",
+    "dist:linux": "npm run build:electron && electron-builder --linux"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -16,6 +22,43 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
+    "cross-env": "^7.0.3",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
     "vite": "^5.4.2"
+  },
+  "build": {
+    "appId": "com.brassbook.financetracker",
+    "productName": "BrassBook",
+    "copyright": "Copyright © 2026 BrassBook",
+    "files": [
+      "dist-electron/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "artifactName": "BrassBook-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] }
+      ],
+      "artifactName": "BrassBook-${version}-${arch}.${ext}",
+      "category": "public.app-category.finance"
+    },
+    "linux": {
+      "target": [{ "target": "AppImage", "arch": ["x64"] }],
+      "artifactName": "BrassBook-${version}.${ext}",
+      "category": "Finance"
+    }
   }
 }

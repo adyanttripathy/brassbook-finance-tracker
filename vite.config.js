@@ -1,8 +1,13 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// base must match the repo name so assets resolve on GitHub Pages
+const isElectron = process.env.BUILD_TARGET === "electron";
+
 export default defineConfig({
   plugins: [react()],
-  base: "/brassbook-finance-tracker/",
+  base: isElectron ? "./" : "/brassbook-finance-tracker/",
+  build: {
+    outDir: isElectron ? "dist-electron" : "dist",
+    emptyOutDir: true,
+  },
 });
